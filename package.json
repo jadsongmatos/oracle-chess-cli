@@ -1,0 +1,17 @@
+{
+  "name": "oracle-chess-cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.ts",
+  "scripts": {
+    "start": "ts-node ./main.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chess.js": "^1.0.0-beta.5",
+    "ts-node": "^10.9.1"
+  }
+}
