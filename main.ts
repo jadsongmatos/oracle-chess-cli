@@ -424,6 +424,61 @@ export class Chess {
     this._turn = them;
   }
 
+  private _undoMove() {
+    const old: any = this._history.pop();
+    if (old === undefined) {
+      return null;
+    }
+
+    const move = old.move;
+
+    this._kings = old.kings;
+    this._turn = old.turn;
+    this._castling = old.castling;
+    this._epSquare = old.epSquare;
+    this._halfMoves = old.halfMoves;
+    this._moveNumber = old.moveNumber;
+
+    const us = this._turn;
+    const them = this._swapColor(us);
+
+    this._board[move.from] = this._board[move.to];
+    this._board[move.from].type = move.piece; // to undo any promotions
+    delete this._board[move.to];
+
+    if (move.captured) {
+      if (move.flags & BITS.EP_CAPTURE) {
+        // en passant capture
+        let index: number;
+        if (us === BLACK) {
+          index = move.to - 16;
+        } else {
+          index = move.to + 16;
+        }
+        this._board[index] = { type: PAWN, color: them };
+      } else {
+        // regular capture
+        this._board[move.to] = { type: move.captured, color: them };
+      }
+    }
+
+    if (move.flags & (BITS.KSIDE_CASTLE | BITS.QSIDE_CASTLE)) {
+      let castlingTo: number, castlingFrom: number;
+      if (move.flags & BITS.KSIDE_CASTLE) {
+        castlingTo = move.to + 1;
+        castlingFrom = move.to - 1;
+      } else {
+        castlingTo = move.to - 2;
+        castlingFrom = move.to + 1;
+      }
+
+      this._board[castlingTo] = this._board[castlingFrom];
+      delete this._board[castlingFrom];
+    }
+
+    return move;
+  }
+
   _moves({
     legal = true,
     piece = undefined,
@@ -607,10 +662,9 @@ export class Chess {
     }
 
     // filter out illegal moves
-    // filter out illegal moves
     const legalMoves: any[] = [];
-
-    for (let i = 0, len = moves.length; i < len; i++) {
+    let len = moves.length;
+    for (let i = 0; i < len; i++) {
       this._makeMove(moves[i]);
       if (!this._isKingAttacked(us)) {
         legalMoves.push(moves[i]);
@@ -722,6 +776,4 @@ export class Chess {
   turn() {}
 
   board() {}
-
-  history() {}
 }
