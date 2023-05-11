@@ -13,41 +13,41 @@ const PIECE_OFFSETS = {
 
 // prettier-ignore
 const ATTACKS = [
-    20, 0, 0, 0, 0, 0, 0, 24,  0, 0, 0, 0, 0, 0,20, 0,
-     0,20, 0, 0, 0, 0, 0, 24,  0, 0, 0, 0, 0,20, 0, 0,
-     0, 0,20, 0, 0, 0, 0, 24,  0, 0, 0, 0,20, 0, 0, 0,
-     0, 0, 0,20, 0, 0, 0, 24,  0, 0, 0,20, 0, 0, 0, 0,
-     0, 0, 0, 0,20, 0, 0, 24,  0, 0,20, 0, 0, 0, 0, 0,
-     0, 0, 0, 0, 0,20, 2, 24,  2,20, 0, 0, 0, 0, 0, 0,
-     0, 0, 0, 0, 0, 2,53, 56, 53, 2, 0, 0, 0, 0, 0, 0,
-    24,24,24,24,24,24,56,  0, 56,24,24,24,24,24,24, 0,
-     0, 0, 0, 0, 0, 2,53, 56, 53, 2, 0, 0, 0, 0, 0, 0,
-     0, 0, 0, 0, 0,20, 2, 24,  2,20, 0, 0, 0, 0, 0, 0,
-     0, 0, 0, 0,20, 0, 0, 24,  0, 0,20, 0, 0, 0, 0, 0,
-     0, 0, 0,20, 0, 0, 0, 24,  0, 0, 0,20, 0, 0, 0, 0,
-     0, 0,20, 0, 0, 0, 0, 24,  0, 0, 0, 0,20, 0, 0, 0,
-     0,20, 0, 0, 0, 0, 0, 24,  0, 0, 0, 0, 0,20, 0, 0,
-    20, 0, 0, 0, 0, 0, 0, 24,  0, 0, 0, 0, 0, 0,20
-  ];
+  20, 0, 0, 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 20, 0,
+  0, 20, 0, 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 20, 0, 0,
+  0, 0, 20, 0, 0, 0, 0, 24, 0, 0, 0, 0, 20, 0, 0, 0,
+  0, 0, 0, 20, 0, 0, 0, 24, 0, 0, 0, 20, 0, 0, 0, 0,
+  0, 0, 0, 0, 20, 0, 0, 24, 0, 0, 20, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 20, 2, 24, 2, 20, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 2, 53, 56, 53, 2, 0, 0, 0, 0, 0, 0,
+  24, 24, 24, 24, 24, 24, 56, 0, 56, 24, 24, 24, 24, 24, 24, 0,
+  0, 0, 0, 0, 0, 2, 53, 56, 53, 2, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 20, 2, 24, 2, 20, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 20, 0, 0, 24, 0, 0, 20, 0, 0, 0, 0, 0,
+  0, 0, 0, 20, 0, 0, 0, 24, 0, 0, 0, 20, 0, 0, 0, 0,
+  0, 0, 20, 0, 0, 0, 0, 24, 0, 0, 0, 0, 20, 0, 0, 0,
+  0, 20, 0, 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 20, 0, 0,
+  20, 0, 0, 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 20
+];
 
 // prettier-ignore
 const RAYS = [
-     17,  0,  0,  0,  0,  0,  0, 16,  0,  0,  0,  0,  0,  0, 15, 0,
-      0, 17,  0,  0,  0,  0,  0, 16,  0,  0,  0,  0,  0, 15,  0, 0,
-      0,  0, 17,  0,  0,  0,  0, 16,  0,  0,  0,  0, 15,  0,  0, 0,
-      0,  0,  0, 17,  0,  0,  0, 16,  0,  0,  0, 15,  0,  0,  0, 0,
-      0,  0,  0,  0, 17,  0,  0, 16,  0,  0, 15,  0,  0,  0,  0, 0,
-      0,  0,  0,  0,  0, 17,  0, 16,  0, 15,  0,  0,  0,  0,  0, 0,
-      0,  0,  0,  0,  0,  0, 17, 16, 15,  0,  0,  0,  0,  0,  0, 0,
-      1,  1,  1,  1,  1,  1,  1,  0, -1, -1,  -1,-1, -1, -1, -1, 0,
-      0,  0,  0,  0,  0,  0,-15,-16,-17,  0,  0,  0,  0,  0,  0, 0,
-      0,  0,  0,  0,  0,-15,  0,-16,  0,-17,  0,  0,  0,  0,  0, 0,
-      0,  0,  0,  0,-15,  0,  0,-16,  0,  0,-17,  0,  0,  0,  0, 0,
-      0,  0,  0,-15,  0,  0,  0,-16,  0,  0,  0,-17,  0,  0,  0, 0,
-      0,  0,-15,  0,  0,  0,  0,-16,  0,  0,  0,  0,-17,  0,  0, 0,
-      0,-15,  0,  0,  0,  0,  0,-16,  0,  0,  0,  0,  0,-17,  0, 0,
-    -15,  0,  0,  0,  0,  0,  0,-16,  0,  0,  0,  0,  0,  0,-17
-  ];
+  17, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 15, 0,
+  0, 17, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 15, 0, 0,
+  0, 0, 17, 0, 0, 0, 0, 16, 0, 0, 0, 0, 15, 0, 0, 0,
+  0, 0, 0, 17, 0, 0, 0, 16, 0, 0, 0, 15, 0, 0, 0, 0,
+  0, 0, 0, 0, 17, 0, 0, 16, 0, 0, 15, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 17, 0, 16, 0, 15, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 17, 16, 15, 0, 0, 0, 0, 0, 0, 0,
+  1, 1, 1, 1, 1, 1, 1, 0, -1, -1, -1, -1, -1, -1, -1, 0,
+  0, 0, 0, 0, 0, 0, -15, -16, -17, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, -15, 0, -16, 0, -17, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, -15, 0, 0, -16, 0, 0, -17, 0, 0, 0, 0, 0,
+  0, 0, 0, -15, 0, 0, 0, -16, 0, 0, 0, -17, 0, 0, 0, 0,
+  0, 0, -15, 0, 0, 0, 0, -16, 0, 0, 0, 0, -17, 0, 0, 0,
+  0, -15, 0, 0, 0, 0, 0, -16, 0, 0, 0, 0, 0, -17, 0, 0,
+  -15, 0, 0, 0, 0, 0, 0, -16, 0, 0, 0, 0, 0, 0, -17
+];
 
 const PIECE_MASKS = { p: 0x1, n: 0x2, b: 0x4, r: 0x8, q: 0x10, k: 0x20 };
 
@@ -128,6 +128,26 @@ const BITS: Record<string, number> = {
   QSIDE_CASTLE: 64,
 };
 
+type InternalMove = {
+  color: Color
+  from: number
+  to: number
+  piece: PieceSymbol
+  captured?: PieceSymbol
+  promotion?: PieceSymbol
+  flags: number
+}
+
+interface History {
+  move: InternalMove
+  kings: Record<Color, number>
+  turn: Color
+  castling: Record<Color, number>
+  epSquare: number
+  halfMoves: number
+  moveNumber: number
+}
+
 const ROOKS = {
   w: [
     { square: Ox88.a1, flag: BITS.QSIDE_CASTLE },
@@ -170,27 +190,31 @@ const RANK_2 = 6;
 const RANK_7 = 1;
 const RANK_8 = 0;
 
+const FLAGS: Record<string, string> = {
+  NORMAL: 'n',
+  CAPTURE: 'c',
+  BIG_PAWN: 'b',
+  EP_CAPTURE: 'e',
+  PROMOTION: 'p',
+  KSIDE_CASTLE: 'k',
+  QSIDE_CASTLE: 'q',
+}
+
 const SECOND_RANK = { b: RANK_7, w: RANK_2 };
 
 export class Chess {
-  _board = new Array<Piece>(128);
-  _kings = { w: EMPTY, b: EMPTY };
-  _turn: Color;
-  _castling = { w: 0, b: 0 };
-  _epSquare = EMPTY;
-  _halfMoves = 0;
-  _moveNumber = 1;
-  _history = [];
+  private _board = new Array<Piece>(128)
+  private _turn: Color = WHITE
 
-  constructor() {
-    this._board = new Array<Piece>(128);
-    this._kings = { w: EMPTY, b: EMPTY };
-    this._turn = WHITE;
-    this._castling = { w: 0, b: 0 };
-    this._epSquare = EMPTY;
-    this._halfMoves = 0;
-    this._moveNumber = 1;
-    this._history = [];
+  private _kings: Record<Color, number> = { w: EMPTY, b: EMPTY }
+  private _epSquare = -1
+  private _halfMoves = 0
+  private _moveNumber = 0
+  private _history: History[] = []
+  private _castling: Record<Color, number> = { w: 0, b: 0 }
+
+  constructor(moves) {
+    this.load(moves)
   }
 
   _updateCastlingRights() {
@@ -329,7 +353,7 @@ export class Chess {
       : this._attacked(this._swapColor(color), square);
   }
 
-  private _makeMove(move: any) {
+  private _makeMove(move: InternalMove) {
     const us = this._turn;
     const them = this._swapColor(us);
 
@@ -726,6 +750,8 @@ export class Chess {
     this._history = [];
   }
 
+  load(moves: any[]) { }
+
   get(square) {
     return this._board[Ox88[square]] || false;
   }
@@ -759,21 +785,339 @@ export class Chess {
     return this.isCheck() && this._moves().length === 0;
   }
 
-  isStalemate() {}
+  isStalemate() {
+    return !this.isCheck() && this._moves().length === 0
+  }
 
-  isInsufficientMaterial() {}
+  isInsufficientMaterial() {
+    /*
+     * k.b. vs k.b. (of opposite colors) with mate in 1:
+     * 8/8/8/8/1b6/8/B1k5/K7 b - - 0 1
+     *
+     * k.b. vs k.n. with mate in 1:
+     * 8/8/8/8/1n6/8/B7/K1k5 b - - 2 1
+     */
+    const pieces: Record<PieceSymbol, number> = {
+      b: 0,
+      n: 0,
+      r: 0,
+      q: 0,
+      k: 0,
+      p: 0,
+    }
+    const bishops: number[] = []
+    let numPieces = 0
+    let squareColor = 0
+
+    for (let i = Ox88.a8; i <= Ox88.h1; i++) {
+      squareColor = (squareColor + 1) % 2
+      if (i & 0x88) {
+        i += 7
+        continue
+      }
+
+      const piece = this._board[i]
+      if (piece) {
+        pieces[piece.type] = piece.type in pieces ? pieces[piece.type] + 1 : 1
+        if (piece.type === BISHOP) {
+          bishops.push(squareColor)
+        }
+        numPieces++
+      }
+    }
+
+    // k vs. k
+    if (numPieces === 2) {
+      return true
+    } else if (
+      // k vs. kn .... or .... k vs. kb
+      numPieces === 3 &&
+      (pieces[BISHOP] === 1 || pieces[KNIGHT] === 1)
+    ) {
+      return true
+    } else if (numPieces === pieces[BISHOP] + 2) {
+      // kb vs. kb where any number of bishops are all on the same color
+      let sum = 0
+      const len = bishops.length
+      for (let i = 0; i < len; i++) {
+        sum += bishops[i]
+      }
+      if (sum === 0 || sum === len) {
+        return true
+      }
+    }
+
+    return false
+  }
 
   isThreefoldRepetition() {}
 
-  isDraw() {}
+  isDraw() {
+    return (
+      this._halfMoves >= 100 || // 50 moves per side = 100 half moves
+      this.isStalemate() ||
+      this.isInsufficientMaterial() ||
+      this.isThreefoldRepetition() // TODO: 
+    )
+  }
 
-  isGameOver() {}
+  isGameOver() {
+    return this.isCheckmate() || this.isStalemate() || this.isDraw()
+  }
 
-  move() {}
+  move() { }
 
-  undo() {}
+  moves({
+    legal = true,
+    piece = undefined,
+    square = undefined,
+  }: {
+    legal?: boolean
+    piece?: PieceSymbol
+    square?: any
+  } = {}) {
+    const forSquare = square
+    const forPiece = piece?.toLowerCase()
 
-  turn() {}
+    const moves: InternalMove[] = []
+    const us = this._turn
+    const them = this._swapColor(us)
 
-  board() {}
+    let firstSquare = Ox88.a8
+    let lastSquare = Ox88.h1
+    let singleSquare = false
+
+    // are we generating moves for a single square?
+    if (forSquare) {
+      // illegal square, return empty moves
+      if (!(forSquare in Ox88)) {
+        return []
+      } else {
+        firstSquare = lastSquare = Ox88[forSquare]
+        singleSquare = true
+      }
+    }
+
+    for (let from = firstSquare; from <= lastSquare; from++) {
+      // did we run off the end of the board
+      if (from & 0x88) {
+        from += 7
+        continue
+      }
+
+      // empty square or opponent, skip
+      if (!this._board[from] || this._board[from].color === them) {
+        continue
+      }
+      const { type } = this._board[from]
+
+      let to: number
+      if (type === PAWN) {
+        if (forPiece && forPiece !== type) continue
+
+        // single square, non-capturing
+        to = from + PAWN_OFFSETS[us][0]
+        if (!this._board[to]) {
+          this.addMove(moves, us, from, to, PAWN)
+
+          // double square
+          to = from + PAWN_OFFSETS[us][1]
+          if (SECOND_RANK[us] === this.rank(from) && !this._board[to]) {
+            this.addMove(moves, us, from, to, PAWN, undefined, BITS.BIG_PAWN)
+          }
+        }
+
+        // pawn captures
+        for (let j = 2; j < 4; j++) {
+          to = from + PAWN_OFFSETS[us][j]
+          if (to & 0x88) continue
+
+          if (this._board[to]?.color === them) {
+            this.addMove(
+              moves,
+              us,
+              from,
+              to,
+              PAWN,
+              this._board[to].type,
+              BITS.CAPTURE
+            )
+          } else if (to === this._epSquare) {
+            this.addMove(moves, us, from, to, PAWN, PAWN, BITS.EP_CAPTURE)
+          }
+        }
+      } else {
+        if (forPiece && forPiece !== type) continue
+
+        for (let j = 0, len = PIECE_OFFSETS[type].length; j < len; j++) {
+          const offset = PIECE_OFFSETS[type][j]
+          to = from
+
+          while (true) {
+            to += offset
+            if (to & 0x88) break
+
+            if (!this._board[to]) {
+              this.addMove(moves, us, from, to, type)
+            } else {
+              // own color, stop loop
+              if (this._board[to].color === us) break
+
+              this.addMove(
+                moves,
+                us,
+                from,
+                to,
+                type,
+                this._board[to].type,
+                BITS.CAPTURE
+              )
+              break
+            }
+
+            /* break, if knight or king */
+            if (type === KNIGHT || type === KING) break
+          }
+        }
+      }
+    }
+
+    /*
+     * check for castling if we're:
+     *   a) generating all moves, or
+     *   b) doing single square move generation on the king's square
+     */
+
+    if (forPiece === undefined || forPiece === KING) {
+      if (!singleSquare || lastSquare === this._kings[us]) {
+        // king-side castling
+        if (this._castling[us] & BITS.KSIDE_CASTLE) {
+          const castlingFrom = this._kings[us]
+          const castlingTo = castlingFrom + 2
+
+          if (
+            !this._board[castlingFrom + 1] &&
+            !this._board[castlingTo] &&
+            !this._attacked(them, this._kings[us]) &&
+            !this._attacked(them, castlingFrom + 1) &&
+            !this._attacked(them, castlingTo)
+          ) {
+            this.addMove(
+              moves,
+              us,
+              this._kings[us],
+              castlingTo,
+              KING,
+              undefined,
+              BITS.KSIDE_CASTLE
+            )
+          }
+        }
+
+        // queen-side castling
+        if (this._castling[us] & BITS.QSIDE_CASTLE) {
+          const castlingFrom = this._kings[us]
+          const castlingTo = castlingFrom - 2
+
+          if (
+            !this._board[castlingFrom - 1] &&
+            !this._board[castlingFrom - 2] &&
+            !this._board[castlingFrom - 3] &&
+            !this._attacked(them, this._kings[us]) &&
+            !this._attacked(them, castlingFrom - 1) &&
+            !this._attacked(them, castlingTo)
+          ) {
+            this.addMove(
+              moves,
+              us,
+              this._kings[us],
+              castlingTo,
+              KING,
+              undefined,
+              BITS.QSIDE_CASTLE
+            )
+          }
+        }
+      }
+    }
+
+    /*
+     * return all pseudo-legal moves (this includes moves that allow the king
+     * to be captured)
+     */
+    if (!legal || this._kings[us] === -1) {
+      return moves
+    }
+
+    // filter out illegal moves
+    const legalMoves: InternalMove[] = []
+
+    for (let i = 0, len = moves.length; i < len; i++) {
+      this._makeMove(moves[i])
+      if (!this._isKingAttacked(us)) {
+        legalMoves.push(moves[i])
+      }
+      this._undoMove()
+    }
+
+    return legalMoves
+  }
+
+  // pretty = external move object
+  private _makePretty(uglyMove: any): any {
+    const { color, piece, from, to, flags, captured, promotion } = uglyMove
+
+    let prettyFlags = ''
+
+    for (const flag in BITS) {
+      if (BITS[flag] & flags) {
+        prettyFlags += FLAGS[flag]
+      }
+    }
+
+    const move: any = {
+      color,
+      piece,
+      flags: prettyFlags,
+    }
+
+    // generate the FEN for the 'after' key
+    this._makeMove(uglyMove)
+    this._undoMove()
+
+    if (captured) {
+      move.captured = captured
+    }
+    if (promotion) {
+      move.promotion = promotion
+      move.lan += promotion
+    }
+
+    return move
+  }
+
+  undo() {
+    const move = this._undoMove()
+    return move ? this._makePretty(move) : null
+  }
+
+  turn() {
+    return this._turn
+  }
+
+  allMoves(depth: number): any[][] {
+    if (depth === 0 || this.isGameOver()) {
+      return [];
+    }
+
+    let movesList: any[][] = [];
+    for (let move of this.moves()) {
+      this._makeMove(move);
+      let newMovesList: any[][] = [[move]].concat(this.allMoves(depth - 1));
+      this._undoMove();
+      movesList.push(newMovesList);
+    }
+
+    return movesList;
+  }
 }
