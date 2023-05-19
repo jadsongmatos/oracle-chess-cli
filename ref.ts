@@ -66,9 +66,9 @@ function listMovesToDepth3(game: Chess, depth: number): any {
 //console.log(moves.length)
 
 
-function listMovesDepth2(game: Chess) {
+function listMovesDepth3(game: Chess) {
     let moves1d = game.moves({ verbose: false })
-    //const result = Array.from({ length: moves1d.length })
+
 
     return moves1d.map(move1d => {
         const game1d = new Chess(game.fen());
@@ -76,10 +76,19 @@ function listMovesDepth2(game: Chess) {
 
         let moves2d = game1d.moves({ verbose: false })
 
-        return [move1d,moves2d.map(move2d => {
-            return move2d
+        return [move1d, moves2d.map(move2d => {
+            const game3d = new Chess(game1d.fen());
+            game3d.move(move2d);
+
+            let moves3d = game3d.moves({ verbose: false })
+
+            return [move2d, moves3d.map(move3d => {
+                return move3d
+            })]
         })]
     })
 }
 
-console.log(listMovesDepth2(game));
+const list = listMovesDepth3(game)
+console.log(list[0][0])
+console.log(list[0][1]);
