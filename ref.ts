@@ -32,7 +32,7 @@ function allMoves(chess: Chess, depth: number = 1): Move[] {
 //console.log(allMoves(game, 2));
 
 function listMovesToDepth3(game: Chess, depth: number): any {
-    const moves:any = [];
+    const moves: any = [];
 
     // Recursive function to generate and explore moves
     function exploreMoves(currentGame: Chess, currentDepth: number) {
@@ -47,11 +47,11 @@ function listMovesToDepth3(game: Chess, depth: number): any {
             const nextGame = new Chess(currentGame.fen());
             nextGame.move(move);
 
-   
+
 
             // Recursively explore next moves
             let tmp = listMovesToDepth3(nextGame, currentDepth - 1);
-            moves.push(move.to,tmp);
+            moves.push(move.to, tmp);
         }
     }
 
@@ -69,18 +69,17 @@ function listMovesToDepth3(game: Chess, depth: number): any {
 function listMovesDepth2(game: Chess) {
     let moves1d = game.moves({ verbose: false })
     //const result = Array.from({ length: moves1d.length })
-    const result = Array.from(moves1d, (move1d) => {
+
+    return moves1d.map(move1d => {
         const game1d = new Chess(game.fen());
         game1d.move(move1d);
 
         let moves2d = game1d.moves({ verbose: false })
 
-        return [move1d,Array.from(moves2d, (move2d) => {
+        return [move1d,moves2d.map(move2d => {
             return move2d
-        })];
-    });
-
-    return result;
+        })]
+    })
 }
 
 console.log(listMovesDepth2(game));
