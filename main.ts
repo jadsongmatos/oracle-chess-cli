@@ -129,23 +129,23 @@ const BITS: Record<string, number> = {
 };
 
 type InternalMove = {
-  color: Color
-  from: number
-  to: number
-  piece: PieceSymbol
-  captured?: PieceSymbol
-  promotion?: PieceSymbol
-  flags: number
-}
+  color: Color;
+  from: number;
+  to: number;
+  piece: PieceSymbol;
+  captured?: PieceSymbol;
+  promotion?: PieceSymbol;
+  flags: number;
+};
 
 interface History {
-  move: InternalMove
-  kings: Record<Color, number>
-  turn: Color
-  castling: Record<Color, number>
-  epSquare: number
-  halfMoves: number
-  moveNumber: number
+  move: InternalMove;
+  kings: Record<Color, number>;
+  turn: Color;
+  castling: Record<Color, number>;
+  epSquare: number;
+  halfMoves: number;
+  moveNumber: number;
 }
 
 const ROOKS = {
@@ -191,30 +191,30 @@ const RANK_7 = 1;
 const RANK_8 = 0;
 
 const FLAGS: Record<string, string> = {
-  NORMAL: 'n',
-  CAPTURE: 'c',
-  BIG_PAWN: 'b',
-  EP_CAPTURE: 'e',
-  PROMOTION: 'p',
-  KSIDE_CASTLE: 'k',
-  QSIDE_CASTLE: 'q',
-}
+  NORMAL: "n",
+  CAPTURE: "c",
+  BIG_PAWN: "b",
+  EP_CAPTURE: "e",
+  PROMOTION: "p",
+  KSIDE_CASTLE: "k",
+  QSIDE_CASTLE: "q",
+};
 
 const SECOND_RANK = { b: RANK_7, w: RANK_2 };
 
 export class Chess {
-  private _board = new Array<Piece>(128)
-  private _turn: Color = WHITE
+  private _board = new Array<Piece>(128);
+  private _turn: Color = WHITE;
 
-  private _kings: Record<Color, number> = { w: EMPTY, b: EMPTY }
-  private _epSquare = -1
-  private _halfMoves = 0
-  private _moveNumber = 0
-  private _history: History[] = []
-  private _castling: Record<Color, number> = { w: 0, b: 0 }
+  private _kings: Record<Color, number> = { w: EMPTY, b: EMPTY };
+  private _epSquare = -1;
+  private _halfMoves = 0;
+  private _moveNumber = 0;
+  private _history: History[] = [];
+  private _castling: Record<Color, number> = { w: 0, b: 0 };
 
-  constructor(moves) {
-    this.load(moves)
+  constructor(moves: any) {
+    this.load(moves);
   }
 
   _updateCastlingRights() {
@@ -752,11 +752,11 @@ export class Chess {
 
   load(moves: any[]) { }
 
-  get(square) {
+  get(square: any) {
     return this._board[Ox88[square]] || false;
   }
 
-  remove(square) {
+  remove(square: any) {
     const piece = this.get(square);
     delete this._board[Ox88[square]];
     if (piece && piece.type === KING) {
@@ -769,7 +769,7 @@ export class Chess {
     return piece;
   }
 
-  isAttacked(square, attackedBy: Color) {
+  isAttacked(square: any, attackedBy: Color) {
     return this._attacked(attackedBy, Ox88[square]);
   }
 
@@ -786,7 +786,7 @@ export class Chess {
   }
 
   isStalemate() {
-    return !this.isCheck() && this._moves().length === 0
+    return !this.isCheck() && this._moves().length === 0;
   }
 
   isInsufficientMaterial() {
@@ -804,65 +804,65 @@ export class Chess {
       q: 0,
       k: 0,
       p: 0,
-    }
-    const bishops: number[] = []
-    let numPieces = 0
-    let squareColor = 0
+    };
+    const bishops: number[] = [];
+    let numPieces = 0;
+    let squareColor = 0;
 
     for (let i = Ox88.a8; i <= Ox88.h1; i++) {
-      squareColor = (squareColor + 1) % 2
+      squareColor = (squareColor + 1) % 2;
       if (i & 0x88) {
-        i += 7
-        continue
+        i += 7;
+        continue;
       }
 
-      const piece = this._board[i]
+      const piece = this._board[i];
       if (piece) {
-        pieces[piece.type] = piece.type in pieces ? pieces[piece.type] + 1 : 1
+        pieces[piece.type] = piece.type in pieces ? pieces[piece.type] + 1 : 1;
         if (piece.type === BISHOP) {
-          bishops.push(squareColor)
+          bishops.push(squareColor);
         }
-        numPieces++
+        numPieces++;
       }
     }
 
     // k vs. k
     if (numPieces === 2) {
-      return true
+      return true;
     } else if (
       // k vs. kn .... or .... k vs. kb
       numPieces === 3 &&
       (pieces[BISHOP] === 1 || pieces[KNIGHT] === 1)
     ) {
-      return true
+      return true;
     } else if (numPieces === pieces[BISHOP] + 2) {
       // kb vs. kb where any number of bishops are all on the same color
-      let sum = 0
-      const len = bishops.length
+      let sum = 0;
+      const len = bishops.length;
       for (let i = 0; i < len; i++) {
-        sum += bishops[i]
+        sum += bishops[i];
       }
       if (sum === 0 || sum === len) {
-        return true
+        return true;
       }
     }
 
-    return false
+    return false;
   }
 
-  isThreefoldRepetition() {}
+  isThreefoldRepetition() { }
 
   isDraw() {
     return (
       this._halfMoves >= 100 || // 50 moves per side = 100 half moves
       this.isStalemate() ||
       this.isInsufficientMaterial() ||
-      this.isThreefoldRepetition() // TODO: 
-    )
+      this.isThreefoldRepetition() // TODO:
+    );
   }
 
   isGameOver() {
-    return this.isCheckmate() || this.isStalemate() || this.isDraw()
+    return this.isCheckmate() || this.isStalemate() || this.isDraw();
   }
 
   move() { }
@@ -872,65 +872,65 @@ export class Chess {
     piece = undefined,
     square = undefined,
   }: {
-    legal?: boolean
-    piece?: PieceSymbol
-    square?: any
+    legal?: boolean;
+    piece?: PieceSymbol;
+    square?: any;
   } = {}) {
-    const forSquare = square
-    const forPiece = piece?.toLowerCase()
+    const forSquare = square;
+    const forPiece = piece?.toLowerCase();
 
-    const moves: InternalMove[] = []
-    const us = this._turn
-    const them = this._swapColor(us)
+    const moves: InternalMove[] = [];
+    const us = this._turn;
+    const them = this._swapColor(us);
 
-    let firstSquare = Ox88.a8
-    let lastSquare = Ox88.h1
-    let singleSquare = false
+    let firstSquare = Ox88.a8;
+    let lastSquare = Ox88.h1;
+    let singleSquare = false;
 
     // are we generating moves for a single square?
     if (forSquare) {
       // illegal square, return empty moves
       if (!(forSquare in Ox88)) {
-        return []
+        return [];
       } else {
-        firstSquare = lastSquare = Ox88[forSquare]
-        singleSquare = true
+        firstSquare = lastSquare = Ox88[forSquare];
+        singleSquare = true;
       }
     }
 
     for (let from = firstSquare; from <= lastSquare; from++) {
       // did we run off the end of the board
       if (from & 0x88) {
-        from += 7
-        continue
+        from += 7;
+        continue;
       }
 
       // empty square or opponent, skip
       if (!this._board[from] || this._board[from].color === them) {
-        continue
+        continue;
       }
-      const { type } = this._board[from]
+      const { type } = this._board[from];
 
-      let to: number
+      let to: number;
       if (type === PAWN) {
-        if (forPiece && forPiece !== type) continue
+        if (forPiece && forPiece !== type) continue;
 
         // single square, non-capturing
-        to = from + PAWN_OFFSETS[us][0]
+        to = from + PAWN_OFFSETS[us][0];
         if (!this._board[to]) {
-          this.addMove(moves, us, from, to, PAWN)
+          this.addMove(moves, us, from, to, PAWN);
 
           // double square
-          to = from + PAWN_OFFSETS[us][1]
+          to = from + PAWN_OFFSETS[us][1];
           if (SECOND_RANK[us] === this.rank(from) && !this._board[to]) {
-            this.addMove(moves, us, from, to, PAWN, undefined, BITS.BIG_PAWN)
+            this.addMove(moves, us, from, to, PAWN, undefined, BITS.BIG_PAWN);
           }
         }
 
         // pawn captures
         for (let j = 2; j < 4; j++) {
-          to = from + PAWN_OFFSETS[us][j]
-          if (to & 0x88) continue
+          to = from + PAWN_OFFSETS[us][j];
+          if (to & 0x88) continue;
 
           if (this._board[to]?.color === them) {
             this.addMove(
@@ -941,27 +941,27 @@ export class Chess {
               PAWN,
               this._board[to].type,
               BITS.CAPTURE
-            )
+            );
           } else if (to === this._epSquare) {
-            this.addMove(moves, us, from, to, PAWN, PAWN, BITS.EP_CAPTURE)
+            this.addMove(moves, us, from, to, PAWN, PAWN, BITS.EP_CAPTURE);
           }
         }
       } else {
-        if (forPiece && forPiece !== type) continue
+        if (forPiece && forPiece !== type) continue;
 
         for (let j = 0, len = PIECE_OFFSETS[type].length; j < len; j++) {
-          const offset = PIECE_OFFSETS[type][j]
-          to = from
+          const offset = PIECE_OFFSETS[type][j];
+          to = from;
 
           while (true) {
-            to += offset
-            if (to & 0x88) break
+            to += offset;
+            if (to & 0x88) break;
 
             if (!this._board[to]) {
-              this.addMove(moves, us, from, to, type)
+              this.addMove(moves, us, from, to, type);
             } else {
               // own color, stop loop
-              if (this._board[to].color === us) break
+              if (this._board[to].color === us) break;
 
               this.addMove(
                 moves,
@@ -971,12 +971,12 @@ export class Chess {
                 type,
                 this._board[to].type,
                 BITS.CAPTURE
-              )
-              break
+              );
+              break;
             }
 
             /* break, if knight or king */
-            if (type === KNIGHT || type === KING) break
+            if (type === KNIGHT || type === KING) break;
           }
         }
       }
@@ -992,8 +992,8 @@ export class Chess {
       if (!singleSquare || lastSquare === this._kings[us]) {
         // king-side castling
         if (this._castling[us] & BITS.KSIDE_CASTLE) {
-          const castlingFrom = this._kings[us]
-          const castlingTo = castlingFrom + 2
+          const castlingFrom = this._kings[us];
+          const castlingTo = castlingFrom + 2;
 
           if (
             !this._board[castlingFrom + 1] &&
@@ -1010,14 +1010,14 @@ export class Chess {
               KING,
               undefined,
               BITS.KSIDE_CASTLE
-            )
+            );
           }
         }
 
         // queen-side castling
         if (this._castling[us] & BITS.QSIDE_CASTLE) {
-          const castlingFrom = this._kings[us]
-          const castlingTo = castlingFrom - 2
+          const castlingFrom = this._kings[us];
+          const castlingTo = castlingFrom - 2;
 
           if (
             !this._board[castlingFrom - 1] &&
@@ -1035,7 +1035,7 @@ export class Chess {
               KING,
               undefined,
               BITS.QSIDE_CASTLE
-            )
+            );
           }
         }
       }
@@ -1046,32 +1046,32 @@ export class Chess {
      * to be captured)
      */
     if (!legal || this._kings[us] === -1) {
-      return moves
+      return moves;
     }
 
     // filter out illegal moves
-    const legalMoves: InternalMove[] = []
+    const legalMoves: InternalMove[] = [];
 
     for (let i = 0, len = moves.length; i < len; i++) {
-      this._makeMove(moves[i])
+      this._makeMove(moves[i]);
       if (!this._isKingAttacked(us)) {
-        legalMoves.push(moves[i])
+        legalMoves.push(moves[i]);
       }
-      this._undoMove()
+      this._undoMove();
     }
 
-    return legalMoves
+    return legalMoves;
   }
 
   // pretty = external move object
   private _makePretty(uglyMove: any): any {
-    const { color, piece, from, to, flags, captured, promotion } = uglyMove
+    const { color, piece, from, to, flags, captured, promotion } = uglyMove;
 
-    let prettyFlags = ''
+    let prettyFlags = "";
 
     for (const flag in BITS) {
       if (BITS[flag] & flags) {
-        prettyFlags += FLAGS[flag]
+        prettyFlags += FLAGS[flag];
       }
     }
 
@@ -1079,30 +1079,30 @@ export class Chess {
       color,
       piece,
       flags: prettyFlags,
-    }
+    };
 
     // generate the FEN for the 'after' key
-    this._makeMove(uglyMove)
-    this._undoMove()
+    this._makeMove(uglyMove);
+    this._undoMove();
 
     if (captured) {
-      move.captured = captured
+      move.captured = captured;
     }
     if (promotion) {
-      move.promotion = promotion
-      move.lan += promotion
+      move.promotion = promotion;
+      move.lan += promotion;
     }
 
-    return move
+    return move;
   }
 
   undo() {
-    const move = this._undoMove()
-    return move ? this._makePretty(move) : null
+    const move = this._undoMove();
+    return move ? this._makePretty(move) : null;
   }
 
   turn() {
-    return this._turn
+    return this._turn;
   }
 
   allMoves(depth: number): any[][] {
@@ -1121,3 +1121,7 @@ export class Chess {
     return movesList;
   }
 }
+
+const game = new Chess([]);
+
+console.log(game.allMoves(1));
