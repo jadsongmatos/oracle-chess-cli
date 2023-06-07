@@ -6,14 +6,17 @@
   "scripts": {
     "start": "ts-node ./main.ts",
     "ref": "ts-node ./ref.ts",
+    "init": "ts-node ./init.ts",
     "test": "ts-node ./test.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "chess.js": "^1.0.0-beta.5",
+    "@prisma/client": "^4.15.0",
+    "chess.js": "^1.0.0-beta.6",
     "lodash": "^4.17.21",
+    "prisma": "^4.15.0",
     "ts-node": "^10.9.1"
   }
 }
