@@ -34,21 +34,9 @@ function map_gameover_depth4(game: Chess) {
           let game4d = new Chess(game3d.fen());
           game4d.move(move4d);
 
-          const game_over4d = game4d.isGameOver();
-          if (game_over4d) {
-            return [true];
-          }
+          const moves4dResult = [game4d.isGameOver()];
 
-          const moves5dResult = game4d
-            .moves({ verbose: false })
-            .map((move5d) => {
-              let game5d = new Chess(game4d.fen());
-              game5d.move(move5d);
-
-              return [game5d.isGameOver()];
-            });
-
-          return [game_over4d, moves5dResult];
+          return moves4dResult;
         });
 
         return [game_over3d, moves4dResult];
@@ -61,44 +49,29 @@ function map_gameover_depth4(game: Chess) {
   });
 }
 
-let testLoad = new Chess();
+function load_game(moves: Array<number>) {
+  const game = new Chess();
 
-function loadGame(game: Chess, moves: Array<any>) {
-  if (0 < moves.length) {
-    let tmp = game.moves({ verbose: false });
-    //console.log("tmp", tmp);
-    game.move(tmp[moves[0]]);
-    moves.shift();
-    loadGame(game, moves);
-  }
-}
-loadGame(testLoad, [19, 19, 19, 20]);
-console.log("loadGame", testLoad.history(), testLoad.fen());
-
-function copy_game(game: Chess, moves: Array<number>) {
-  // Create a new game instance from the FEN of the current game
-  let copy = new Chess(game.fen());
-
-  // Apply moves to the copy
+  // Apply moves
   moves.forEach((moveIndex) => {
-    let availableMoves = copy.moves();
+    let availableMoves = game.moves();
     if (moveIndex >= 0 && moveIndex < availableMoves.length) {
-      copy.move(availableMoves[moveIndex]);
+      game.move(availableMoves[moveIndex]);
     } else {
       console.error(`Invalid move index: ${moveIndex}`);
     }
   });
 
-  return copy;
+  return game;
 }
 
-testLoad = new Chess();
-copy_game(testLoad, [19, 19, 19, 20]);
-console.log("copy_game", testLoad.history(), testLoad.fen());
+const testLoad = load_game([19, 19, 19, 20]);
+console.log("load_game", testLoad.history(), testLoad.fen());
 
-const aberturas_map: any = map_gameover_depth4(aberturas);
+const aberturas_map = map_gameover_depth4(aberturas);
 
 var checkmates = 0;
+
 function loop(matrix1: any) {
   for (let i = 0; i < matrix1.length; i++) {
     //console.log("i:",i,matrix1[i])
@@ -106,34 +79,33 @@ function loop(matrix1: any) {
       //console.log("i:",i,"j:",j,matrix1[i][1][j])
       for (let k = 0; k < matrix1[i][1][j][1].length; k++) {
         //console.log("i:", i, "j:", j, "k:", k, matrix1[i][1][j][1][k][1]);
+        console.log("i:", i, "j:", j, "k:", k, "checkmates:", checkmates);
         for (let n = 0; n < matrix1[i][1][j][1][k][1].length; n++) {
-          for (let m = 0; m < matrix1[i][1][j][1][k][1][n][1].length; m++) {
-            if (matrix1[i][1][j][1][k][1][n][1][m][0]) {
-              checkmates++;
-              console.log("checkmates", checkmates);
-            }
+          if (matrix1[i][1][j][1][k][1][n][0]) {
+            checkmates++;
+          } else {
+            checkmates = checkmates + add_deep([i, j, k, n]);
           }
-
-          /*let tmp = new Chess();
-          loadGame(tmp, [i, j, k, n]);
-
-          const tmp_map: any = map_gameover_depth4(tmp);
-          loop2(tmp_map);*/
-          /*console.log(
-            "i:",
-            i,
-            "j:",
-            j,
-            "k:",
-            k,
-            "n:",
-            n,
-            matrix1[i][1][j][1][k][1][n][0]
-          );*/
         }
       }
     }
   }
+}
+
+function add_deep(moves: Array<number>) {
+  const game = load_game(moves);
+  let checkmates = 0;
+
+  game.moves({ verbose: false }).forEach((move1d) => {
+    let game1d = new Chess(game.fen());
+    game1d.move(move1d);
+
+    if (game1d.isGameOver()) {
+      checkmates++;
+    }
+  });
+
+  return checkmates
 }
 
 loop(aberturas_map);

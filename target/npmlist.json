@@ -1,0 +1,1 @@
+{"version":"1.0.0","name":"oracle-chess-cli","dependencies":{"@prisma/client":{"version":"4.15.0"},"chess.js":{"version":"1.0.0-beta.6"},"lodash":{"version":"4.17.21"},"prisma":{"version":"4.15.0"},"ts-node":{"version":"10.9.1"}}}
