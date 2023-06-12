@@ -178,103 +178,55 @@ async function salvando_aberturas(matrix1: Array<any>) {
 */
 
 async function salvando_aberturas(matrix1: Array<any>) {
-  const insert1dPromises = matrix1.map(async (e1d: Array<any>, i: number) => {
-    return prisma.tree.create({
-      data: {
-        user_id: "4c57cec3-a797-4366-a442-bdffbb3f7428",
-        gameover: e1d[0].gameover,
-        checkmate: e1d[0].checkmate,
-        move: i,
-      },
-    });
-  });
-
-  await Promise.all(insert1dPromises);
-
-  for (let i = 0; i < matrix1.length; i++) {
-    const insert1dPromises = matrix1.map(async (e1d: Array<any>, i: number) => {
-      return prisma.tree.create({
+  try {
+    for (let i = 0; i < matrix1.length; i++) {
+      const e1d = await prisma.tree.create({
         data: {
           user_id: "4c57cec3-a797-4366-a442-bdffbb3f7428",
-          gameover: e1d[0].gameover,
-          checkmate: e1d[0].checkmate,
+          gameover: matrix1[i][0].gameover,
+          checkmate: matrix1[i][0].checkmate,
           move: i,
         },
       });
-    });
-
-    const result_1d = await Promise.all(insert1dPromises);
-
-    const insert2dPromises = result_1d.map((e1d: any, i: number) => {
-      return prisma.tree.create({
-        data: {
-          user_id: "4c57cec3-a797-4366-a442-bdffbb3f7428",
-          gameover: matrix1[i][1][0].gameover,
-          checkmate: matrix1[i][1][0].checkmate,
-          move: i,
-          previousMoveId: e1d.id,
-        },
-      });
-    });
-
-    const result_2d = await Promise.all(insert2dPromises);
-
-    const insert3dPromises = result_1d.map((e1d: any, i: number) => {
-      return result_2d.map((e2d: any, j: number) => {
-        console.log(i, j);
-        return prisma.tree.create({
+      for (let j = 0; j < matrix1[i][1].length; j++) {
+        const e2d = await prisma.tree.create({
           data: {
             user_id: "4c57cec3-a797-4366-a442-bdffbb3f7428",
             gameover: matrix1[i][1][j][0].gameover,
             checkmate: matrix1[i][1][j][0].checkmate,
-            move: i,
-            previousMoveId: e2d.id,
+            move: j,
+            previousMoveId: e1d.id
           },
         });
-      });
-    });
 
-    const result_3d = await Promise.all(insert3dPromises);
-
-    const insert4dPromises = result_1d.map((e1d: any, i: number) => {
-      return result_2d.map((e2d: any, j: number) => {
-        return result_3d.map((e3d: any, k: number) => {
-          console.log(i, j, k);
-          return prisma.tree.create({
+        for (let k = 0; k < matrix1[i][1][j][1].length; k++) {
+          console.log("i:", i, "j:", j, "k:", k);
+          const e3d = await prisma.tree.create({
             data: {
               user_id: "4c57cec3-a797-4366-a442-bdffbb3f7428",
               gameover: matrix1[i][1][j][1][k][0].gameover,
               checkmate: matrix1[i][1][j][1][k][0].checkmate,
-              move: i,
-              previousMoveId: e3d.id,
+              move: k,
+              previousMoveId: e2d.id
             },
           });
-        });
-      });
-    });
 
-    const result_4d = await Promise.all(insert4dPromises);
-
-    const insert5dPromises = result_1d.map((e1d: any, i: number) => {
-      return result_2d.map((e2d: any, j: number) => {
-        return result_3d.map((e3d: any, k: number) => {
-          return result_4d.map((e4d: any, k: number) => {
-            console.log(i, j, k, matrix1[i][1][j][1][k][1]);
-            /*return prisma.tree.create({
+          for (let n = 0; n < matrix1[i][1][j][1][k][1].length; n++) {
+            await prisma.tree.create({
               data: {
                 user_id: "4c57cec3-a797-4366-a442-bdffbb3f7428",
-                gameover: matrix1[e1d.move][1][j][1][k][1].gameover,
-                checkmate: matrix1[e1d.move][1][j][1][k][1].checkmate,
-                move: i,
-                previousMoveId: e4d.id,
+                gameover: matrix1[i][1][j][1][k][1][n].gameover,
+                checkmate: matrix1[i][1][j][1][k][1][n].checkmate,
+                move: n,
+                previousMoveId: e3d.id
               },
-            });*/
-          });
-        });
-      });
-    });
-
-    //const result_5d = await Promise.all(insert5dPromises);
+            });
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.log("catch", err);
   }
 }
 
