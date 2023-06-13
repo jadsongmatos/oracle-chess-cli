@@ -190,4 +190,15 @@ model User {
   location                      location[]
   session                       session[]
   Tree                          Tree[]
+  Job                           Job[]
+}
+
+model Job {
+  id      String @id
+  data    String
+  status  String
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id])
+
+  @@index([user_id, data])
 }

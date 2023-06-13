@@ -182,46 +182,51 @@ async function salvando_aberturas(matrix1: Array<any>) {
     for (let i = 0; i < matrix1.length; i++) {
       const e1d = await prisma.tree.create({
         data: {
-          user_id: "4c57cec3-a797-4366-a442-bdffbb3f7428",
+          user_id: "668ce6d1-f4c2-439f-af3d-c45cf52eacaa",
           gameover: matrix1[i][0].gameover,
           checkmate: matrix1[i][0].checkmate,
           move: i,
         },
       });
-      for (let j = 0; j < matrix1[i][1].length; j++) {
-        const e2d = await prisma.tree.create({
+
+      const e2dPromises = matrix1[i][1].map((elem: any, j: number) => prisma.tree.create({
+        data: {
+          user_id: "668ce6d1-f4c2-439f-af3d-c45cf52eacaa",
+          gameover: elem[0].gameover,
+          checkmate: elem[0].checkmate,
+          move: j,
+          previousMoveId: e1d.id
+        },
+      }));
+
+      const e2ds = await Promise.all(e2dPromises);
+
+      for (let j = 0; j < e2ds.length; j++) {
+        const e3dPromises = matrix1[i][1][j][1].map((elem: any, k: number) => prisma.tree.create({
           data: {
-            user_id: "4c57cec3-a797-4366-a442-bdffbb3f7428",
-            gameover: matrix1[i][1][j][0].gameover,
-            checkmate: matrix1[i][1][j][0].checkmate,
-            move: j,
-            previousMoveId: e1d.id
+            user_id: "668ce6d1-f4c2-439f-af3d-c45cf52eacaa",
+            gameover: elem[0].gameover,
+            checkmate: elem[0].checkmate,
+            move: k,
+            previousMoveId: e2ds[j].id
           },
-        });
+        }));
 
-        for (let k = 0; k < matrix1[i][1][j][1].length; k++) {
+        const e3ds = await Promise.all(e3dPromises);
+
+        for (let k = 0; k < e3ds.length; k++) {
           console.log("i:", i, "j:", j, "k:", k);
-          const e3d = await prisma.tree.create({
+          const e4dPromises = matrix1[i][1][j][1][k][1].map((elem: any, n: number) => prisma.tree.create({
             data: {
-              user_id: "4c57cec3-a797-4366-a442-bdffbb3f7428",
-              gameover: matrix1[i][1][j][1][k][0].gameover,
-              checkmate: matrix1[i][1][j][1][k][0].checkmate,
-              move: k,
-              previousMoveId: e2d.id
+              user_id: "668ce6d1-f4c2-439f-af3d-c45cf52eacaa",
+              gameover: elem.gameover,
+              checkmate: elem.checkmate,
+              move: n,
+              previousMoveId: e3ds[k].id
             },
-          });
+          }));
 
-          for (let n = 0; n < matrix1[i][1][j][1][k][1].length; n++) {
-            await prisma.tree.create({
-              data: {
-                user_id: "4c57cec3-a797-4366-a442-bdffbb3f7428",
-                gameover: matrix1[i][1][j][1][k][1][n].gameover,
-                checkmate: matrix1[i][1][j][1][k][1][n].checkmate,
-                move: n,
-                previousMoveId: e3d.id
-              },
-            });
-          }
+          await Promise.all(e4dPromises);
         }
       }
     }
@@ -229,5 +234,6 @@ async function salvando_aberturas(matrix1: Array<any>) {
     console.log("catch", err);
   }
 }
+
 
 salvando_aberturas(aberturas_map);
