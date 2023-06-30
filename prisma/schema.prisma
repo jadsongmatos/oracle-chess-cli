@@ -7,22 +7,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model achievement {
-  id               Int                @id
-  name             String             @unique(map: "name_unique") @db.VarChar(45)
-  description      String             @unique(map: "description_unique") @db.VarChar(45)
-  achievement_user achievement_user[]
-}
-
 model achievement_user {
   achievement_id Int
   user_id        String
-  achievement    achievement @relation(fields: [achievement_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_achievement_has_user_achievement1")
-  user           User        @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_achievement_has_user_user1")
+  achievement    achievement @relation(fields: [achievement_id], references: [id])
+  user           User        @relation(fields: [user_id], references: [id])
 
   @@id([achievement_id, user_id])
-  @@index([achievement_id], map: "fk_achievement_has_user_achievement1_idx")
-  @@index([user_id], map: "fk_achievement_has_user_user1_idx")
+  @@index([user_id,achievement_id])
 }
 
 model activity {
@@ -39,23 +31,21 @@ model buy {
   state         Boolean    @default(true)
   item_id       Int
   user_id       String
-  item          item       @relation(fields: [item_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_buy_item1")
-  user          User       @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_buy_user1")
+  item          item       @relation(fields: [item_id], references: [id])
+  user          User       @relation(fields: [user_id], references: [id])
   buy_coin      buy_coin[]
 
-  @@index([item_id], map: "fk_buy_item1_idx")
-  @@index([user_id], map: "fk_buy_user1_idx")
+  @@index([user_id,item_id])
 }
 
 model buy_coin {
   buy_id  Int
   coin_id Int
-  buy     buy  @relation(fields: [buy_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_buy_has_coin_buy1")
-  coin    coin @relation(fields: [coin_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_buy_has_coin_coin1")
+  buy     buy  @relation(fields: [buy_id], references: [id])
+  coin    coin @relation(fields: [coin_id], references: [id])
 
   @@id([buy_id, coin_id])
-  @@index([buy_id], map: "fk_buy_has_coin_buy1_idx")
-  @@index([coin_id], map: "fk_buy_has_coin_coin1_idx")
+  @@index([coin_id,buy_id])
 }
 
 model click {
@@ -63,9 +53,9 @@ model click {
   create_time DateTime @default(now()) @db.Timestamp(6)
   others      String   @db.VarChar(255)
   link_id     Int
-  link        link     @relation(fields: [link_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_click_link1")
+  link        link     @relation(fields: [link_id], references: [id])
 
-  @@index([link_id], map: "fk_click_link1_idx")
+  @@index([link_id])
 }
 
 model coin {
@@ -74,41 +64,29 @@ model coin {
   state           Boolean    @default(true)
   user_id         String
   buy_coin        buy_coin[]
-  user            User       @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_coin_user1")
+  user            User       @relation(fields: [user_id], references: [id])
 
-  @@index([user_id], map: "fk_coin_user1_idx")
-}
-
-model friend {
-  user_id                     String
-  friend_id                   String
-  user_friend_user_idTouser   User   @relation("friend_user_idTouser", fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_friends_user1")
-  user_friend_friend_idTouser User   @relation("friend_friend_idTouser", fields: [friend_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_friends_user2")
-
-  @@id([user_id, friend_id])
-  @@index([user_id], map: "fk_friends_user1_idx")
-  @@index([friend_id], map: "fk_friends_user2_idx")
+  @@index([user_id])
 }
 
 model interaction {
   id                  Int                   @id
   create_time         DateTime              @default(now()) @db.Timestamp(6)
   activity_id         Int
-  activity            activity              @relation(fields: [activity_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_interaction_activity1")
+  activity            activity              @relation(fields: [activity_id], references: [id], map: "fk_interaction_activity1")
   interaction_session interaction_session[]
 
-  @@index([activity_id], map: "fk_interaction_activity1_idx")
+  @@index([activity_id])
 }
 
 model interaction_session {
   interaction_id Int
   session_id     Int
-  interaction    interaction @relation(fields: [interaction_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_interaction_has_session_interaction1")
-  session        session     @relation(fields: [session_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_interaction_has_session_session1")
+  interaction    interaction @relation(fields: [interaction_id], references: [id])
+  session        session     @relation(fields: [session_id], references: [id])
 
   @@id([interaction_id, session_id])
-  @@index([interaction_id], map: "fk_interaction_has_session_interaction1_idx")
-  @@index([session_id], map: "fk_interaction_has_session_session1_idx")
+  @@index([session_id,interaction_id])
 }
 
 model item {
@@ -126,37 +104,23 @@ model link {
   create_time DateTime @default(now()) @db.Timestamp(6)
   user_id     String
   click       click[]
-  user        User     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_link_user1")
+  user        User     @relation(fields: [user_id], references: [id])
 
-  @@index([user_id], map: "fk_link_user1_idx")
-}
-
-model location {
-  id        Int     @id
-  latitude  Decimal @db.Decimal
-  longitude Decimal @db.Decimal
-  city      String  @db.VarChar(45)
-  state     String  @db.Char(2)
-  nation    String  @db.VarChar(45)
-  user_id   String
-  user      User    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_location_user1")
-
-  @@index([user_id], map: "fk_location_user1_idx")
+  @@index([user_id])
 }
 
 model session {
-  id                        Int                     @id
+  id                        Int                     @id @default(autoincrement())
   create_time               DateTime                @default(now()) @db.Timestamp(6)
   end_time_new_session_time Int?
   total_active_time         Unsupported("interval") @default(dbgenerated("'00:00:00'::interval"))
   user_id                   String
   interaction_session       interaction_session[]
-  session                   session?                @relation("sessionTosession", fields: [end_time_new_session_time], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_session_session1")
+  session                   session?                @relation("sessionTosession", fields: [end_time_new_session_time], references: [id], map: "fk_session_session1")
   other_session             session[]               @relation("sessionTosession")
-  user                      User                    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_session_user1")
+  user                      User                    @relation(fields: [user_id], references: [id])
 
-  @@index([end_time_new_session_time], map: "fk_session_session1_idx")
-  @@index([user_id], map: "fk_session_user1_idx")
+  @@index([user_id,end_time_new_session_time])
 }
 
 model Tree {
@@ -174,11 +138,22 @@ model Tree {
   @@index([user_id])
 }
 
+model Job {
+  id      String @id @default(uuid())
+  data    Bytes
+  status  String
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id])
+
+  @@index([user_id, data])
+}
+
 model User {
   id                            String             @id @default(uuid())
-  username                      String             @db.VarChar(16)
+  username                      String             @db.VarChar(255)
   email                         String             @unique @db.VarChar(255)
-  password                      String             @db.VarChar(32)
+  password                      String             @db.VarChar(255)
+  birthday                      DateTime
   create_time                   DateTime           @default(now())
   update_time                   DateTime           @updatedAt
   achievement_user              achievement_user[]
@@ -193,12 +168,32 @@ model User {
   Job                           Job[]
 }
 
-model Job {
-  id      String @id
-  data    String
-  status  String
-  user_id String
-  user    User   @relation(fields: [user_id], references: [id])
+model location {
+  id        Int     @id @default(autoincrement())
+  latitude  Decimal @db.Decimal
+  longitude Decimal @db.Decimal
+  city      Int
+  state     Int
+  nation    String  @db.Char(2)
+  user_id   String
+  user      User    @relation(fields: [user_id], references: [id])
 
-  @@index([user_id, data])
+  @@index([user_id])
+}
+
+model friend {
+  user_id                     String
+  friend_id                   String
+  user_friend_user_idTouser   User   @relation("friend_user_idTouser", fields: [user_id], references: [id])
+  user_friend_friend_idTouser User   @relation("friend_friend_idTouser", fields: [friend_id], references: [id])
+
+  @@id([user_id, friend_id])
+  @@index([friend_id,user_id])
+}
+
+model achievement {
+  id               Int                @id
+  name             String             @unique() @db.VarChar(45)
+  description      String             @unique() @db.VarChar(45)
+  achievement_user achievement_user[]
 }

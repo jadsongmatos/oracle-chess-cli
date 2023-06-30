@@ -1,81 +1,35 @@
-# Oracle Chess Cli
+Aqui está um detalhamento de cada tabela e seus relacionamentos:
 
-1. Tabela user:
-    - Colunas: id, nome de usuário, email, senha, create_time, update_time
-    - Chave primária: id
+1. **Usuário:** Esta é a tabela principal que contém detalhes sobre cada usuário, incluindo id, nome de usuário, e-mail, senha e data de nascimento. Ele está diretamente relacionado a várias outras tabelas, como Job, Tree, achievement_user, buy, coin, friend, link, location e session por meio de relacionamentos de chave estrangeira.
 
-2. Tabela location:
-    - Colunas: id, latitude, longitude, cidade, estado, nação, user_id
-    - Chave primária: id
-    - Chave estrangeira: user_id referencia user(id)
+2. **Job:** Esta tabela possui uma chave estrangeira da tabela User. Parece acompanhar algumas tarefas atribuídas aos usuários, possivelmente em um sistema de fila de tarefas.
 
-3. tabela amigo`:
-    - Colunas: user_id, friend_id
-    - Chave primária: (user_id, friend_id)
-    - Chaves estrangeiras: user_id referencia user(id), friend_id referencia user(id)
+3. **Árvore:** Esta tabela pode fazer parte de um jogo ou sistema de estratégia onde os usuários fazem vários movimentos. Ele tem um relacionamento recursivo consigo mesmo para acompanhar o movimento anterior de um movimento. Também se relaciona com a tabela Usuário, vinculando cada árvore ou movimento a um usuário.
 
-4. Tabela conquistas:
-    - Colunas: id, nome, descrição
-    - Chave primária: id
-    - Índices exclusivos: nome, descrição
+4. **conquista:** Esta tabela contém a lista de conquistas que podem ser conquistadas no sistema. Ele não se vincula diretamente a nenhuma tabela, mas forma um relacionamento muitos-para-muitos com a tabela User por meio da tabela achievement_user.
 
-5. Tabela achievement_user:
-    - Colunas: realização_id, user_id
-    - Chave primária: (achievement_id, user_id)
-    - Chaves estrangeiras: realização_id faz referência a realização(id), user_id faz referência a usuário(id)
+5. **achievement_user:** Esta tabela forma um relacionamento muitos-para-muitos entre o usuário e as tabelas de conquistas. Ele mantém registros de quais conquistas cada usuário obteve.
 
-6. tabela árvore:
-    - Colunas: id, valor, profundidade, gameover, xeque-mate, update_time, user_id, parent_id
-    - Chave primária: id
-    - Chaves estrangeiras: user_id referencia user(id), parent_id referencia tree(id)
+6. **atividade:** Esta é uma tabela autônoma que registra a lista de atividades disponíveis no sistema. Relaciona-se diretamente com a tabela de interação.
 
-7. tabela link:
-    - Colunas: id, url, create_time, user_id
-    - Chave primária: id
-    - Chave estrangeira: user_id referencia user(id)
+7. **interação:** esta tabela registra as interações que ocorrem no sistema, sendo cada interação associada a uma atividade. Ele forma um relacionamento muitos-para-muitos com a tabela de sessão por meio da tabela de interação_sessão.
 
-8. tabela clique:
-    - Colunas: idclick, create_time, outros, link_id
-    - Chave primária: idclick
-    - Chave estrangeira: link_id referencia link(id)
+8. **item:** Esta tabela armazena informações sobre os itens que podem ser adquiridos pelos usuários. Ele se conecta diretamente à tabela de compra.
 
-9. Tabela moedas:
-    - Colunas: id, currency_origin, estado, user_id
-    - Chave primária: id
-    - Chave estrangeira: user_id referencia user(id)
+9. **buy:** Esta tabela registra instâncias de usuários que compram itens. Ele conecta a tabela Usuário e a tabela de itens. Além disso, ele forma um relacionamento muitos-para-muitos com a tabela de moedas por meio da tabela buy_coin.
 
-10. tabela item:
-     - Colunas: id, nome, descrição, custo
-     - Chave primária: id
-     - Índices exclusivos: nome, descrição
+10. **coin:** Esta tabela controla as moedas pertencentes aos usuários. Ele se vincula diretamente à tabela User e forma um relacionamento muitos-para-muitos com a tabela buy por meio da tabela buy_coin.
 
-11. tabela comprar:
-     - Colunas: id, price_at_time, create_time, item_id, user_id
-     - Chave primária: id
-     - Chaves estrangeiras: item_id referencia item(id), user_id referencia user(id)
+11. **friend:** Esta tabela forma um relacionamento muitos-para-muitos com a própria tabela User. Ele registra conexões de amigos entre usuários.
 
-12. Tabela buy_coin:
-     - Colunas: buy_id, coin_id
-     - Chave primária: (buy_id, coin_id)
-     - Chaves estrangeiras: referências buy_id buy(id), referências coin_id coin(id)
+12. **link:** Esta tabela armazena uma lista de links associados aos usuários. Ele se conecta diretamente à tabela User e tem um relacionamento de chave estrangeira com a tabela click.
 
-13. tabela sessão:
-     - Colunas: id, create_time, end_time_new_session_time, total_active_time, user_id
-     - Chave primária: id
-     - Chaves estrangeiras: end_time_new_session_time faz referência a sessão(id), user_id faz referência a user(id)
+13. **localização:** esta tabela acompanha a localização geográfica dos usuários. Ele se conecta diretamente à tabela do usuário.
 
-14. tabela atividade:
-     - Colunas: id, nome
-     - Chave primária: id
+14. **sessão:** Esta tabela pode estar armazenando as sessões do usuário. Ele tem um relacionamento recursivo consigo mesmo para acompanhar o novo tempo de sessão. Ele também se conecta diretamente à tabela User e forma um relacionamento muitos-para-muitos com a tabela de interação por meio da tabela interact_session.
 
-15. tabela interação:
-     - Colunas: id, create_time, activity_id
-     - Chave primária: id
-     - Chave estrangeira: activity_id faz referência a activity(id)
+15. **buy_coin:** Esta tabela forma uma relação muitos-para-muitos entre as tabelas buy e coin. Ele registra quais moedas foram usadas para cada compra.
 
-16. Tabela interaction_session:
-     - Colunas: interact_id, session_id
-     - Chave primária: (interaction_id, session_id)
-     - Chaves estrangeiras: a interação_id faz referência à interação(id), a sessão_id faz referência à sessão(id)
+16. **clique:** Esta tabela registra instâncias de usuários que clicam em links. Tem um relacionamento de chave estrangeira com a tabela de links.
 
-Esse esquema é projetado para um jogo ou uma plataforma gamificada, onde os usuários podem obter conquistas, fazer compras e ter amigos.
+17. **interaction_session:** Esta tabela forma um relacionamento muitos-para-muitos entre as tabelas de interação e de sessão. Ele mantém registros de quais sessões cada interação pertence.
